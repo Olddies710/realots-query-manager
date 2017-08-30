@@ -197,6 +197,8 @@ SOCKET socket = *(SOCKET*)dat;
 
 NetworkMessage msg;
 while(msg.ReadFromSocket(socket)){
+	Database db(host,database,dbpass,username);
+	Query q(db);
 	unsigned char packetId = msg.getByte();
 
 	/* Authentication */
@@ -219,8 +221,6 @@ while(msg.ReadFromSocket(socket)){
 	}
 	else if(packetId == 0x14){
 	//connect_to_db();
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
 	std::cout << "Received playerLogin packet (0x14)" << std::endl;
 	NetworkMessage writeMsg;
 	unsigned int accountNumber = msg.getU32();
@@ -642,8 +642,7 @@ while(msg.ReadFromSocket(socket)){
 	}
 	}
 	else if(packetId == 0x15) {
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	std::cout << "Received playerLogout packet (0x15)" << std::endl;
 	//parseDebug(msg);
 	unsigned int logoutID = msg.getU32();
@@ -674,8 +673,7 @@ while(msg.ReadFromSocket(socket)){
 	std::cout << "Received Banishment Packet (0x19)" << std::endl;
 	parseDebug(msg);
 
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 
 	unsigned int gmID = msg.getU32();
 	std::string bannedStr = msg.getString();
@@ -747,8 +745,7 @@ while(msg.ReadFromSocket(socket)){
 
 	std::cout << ":: Gamemaster ID: " << dec << gmID << " string: " << bannedStr << " ip: " << ip << " << violation: " << reasonStr << " comment: " << commentStr << std::endl;
 
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 
 	q.get_result("SELECT account_nr,account_id FROM players WHERE charname = '" + Database::escapeString(bannedStr) + "'");
 	while(q.fetch_row()) {
@@ -809,8 +806,7 @@ while(msg.ReadFromSocket(socket)){
 	}
 	else if (packetId == 0x1d) {
 	std::cout << "Received logCharacterDeath packet (0x1d)" << std::endl;
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	NetworkMessage writeMsg;
 	//parseDebug(msg);
 	unsigned int victimID = msg.getU32();
@@ -848,8 +844,7 @@ while(msg.ReadFromSocket(socket)){
 	writeMsg.WriteToSocket(socket);
 	}
 	else if(packetId == 0x21){
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	// Finish auctions.
 	std::cout << "Received FinishAuctions packet (0x21)" << std::endl;
 	parseDebug(msg);
@@ -899,8 +894,7 @@ while(msg.ReadFromSocket(socket)){
 	NetworkMessage writeMsg;
 	writeMsg.addByte(0x00);
 
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	q.get_result("SELECT id, house_id, transfer_to, gold FROM `house_transfer` WHERE done = 0");
 	int total = q.num_rows();
 
@@ -961,8 +955,7 @@ while(msg.ReadFromSocket(socket)){
 */
 	}
 	else if(packetId == 0x24){
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	// FACC eviction
 	std::cout << "Received evictFreeAccounts packet (0x24)" << std::endl;
 	parseDebug(msg);
@@ -989,8 +982,7 @@ while(msg.ReadFromSocket(socket)){
 	writeMsg.WriteToSocket(socket);
 	}
 	else if(packetId == 0x25){
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	// Deleted char eviction
 	std::cout << "Received evictDeletedCharacters packet (0x25)" << std::endl;
 	parseDebug(msg);
@@ -1020,8 +1012,7 @@ while(msg.ReadFromSocket(socket)){
 
 	}
 	else if(packetId == 0x26) {
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 
 	std::cout << "Received evictExGuildLeaders packet (0x26)" << std::endl;
 	parseDebug(msg);
@@ -1042,8 +1033,7 @@ while(msg.ReadFromSocket(socket)){
 	else if(packetId == 0x2A){
 	// getHouseOwners
 
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	std::cout << "Received getHouseOwners packet (0x2A)" << std::endl;
 	
 	NetworkMessage writeMsg;
@@ -1315,8 +1305,7 @@ while(msg.ReadFromSocket(socket)){
 	}
 	else if(packetId == 0x2E){
 	// clearIsOnline
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	std::cout << "Received clearIsOnline packet (0x2E)" << std::endl;
 	parseDebug(msg);
 	q.execute("UPDATE players SET online='0'");
@@ -1330,8 +1319,7 @@ while(msg.ReadFromSocket(socket)){
 	writeMsg.WriteToSocket(socket);
 	}
 	else if(packetId == 0x2F){
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	// createPlayerlist
 	std::cout << "Received createPlayerlist packet (0x2F)" << std::endl;
 
@@ -1381,8 +1369,7 @@ while(msg.ReadFromSocket(socket)){
 	else if(packetId == 0x30){
 	std::cout << "Received logKilledCreatures packet (0x30)" << std::endl;
 
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 
 	// Num of creatures (2 bytes), length string (2b) string of creature, long killed by, long killed
 	unsigned short Count = msg.getU16();
@@ -1400,8 +1387,7 @@ while(msg.ReadFromSocket(socket)){
 	}
 	else if(packetId == 0x32){
 	// loadPlayers
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	std::cout << "Received loadPlayers packet (0x32)" << std::endl;
 
 	unsigned int unknown = msg.getU32();
@@ -1456,8 +1442,7 @@ while(msg.ReadFromSocket(socket)){
 	else if(packetId == 0x35){
 	std::cout << "Received loadWorldConfig packet (0x35)" << std::endl;
 
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	std::cout << "Determining WorldType" << std::endl;
 	NetworkMessage writeMsg;
 	writeMsg.addByte(0x00);       // Error code
@@ -1485,8 +1470,7 @@ while(msg.ReadFromSocket(socket)){
 	else if (packetId == 0xcb){
 	std::cout << "Received highscore packet (0xCB)" << std::endl;
 	//parseDebug(msg);
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 	unsigned char  unknown2 = msg.getByte();
 	unsigned int   unknown3 = msg.getU32();
 	/*std::cout << "Unknown2: " <<  unknown2 << std::endl;
@@ -1523,8 +1507,7 @@ while(msg.ReadFromSocket(socket)){
 	else if (packetId == 0xcc){
 	std::cout << "Received createHighscores packet (0xCC)" << std::endl;
 	//parseDebug(msg);
-	Database db("localhost","otserv","Cz7u89dmyPzHDNEL","otserv");
-	Query q(db);
+	
 
 	q.execute("DELETE FROM highscores");
 	q.free_result();
