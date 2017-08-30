@@ -1,7 +1,3 @@
-/*
-*   OTServ QueryManager, (c) 2011 Satan Claus Limited
-*/
-
 #include "networkmessage.h"
 #include "definitions.h"
 
